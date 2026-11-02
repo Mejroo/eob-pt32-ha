@@ -41,6 +41,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
 class PT32Climate(PT32Entity, ClimateEntity):
     _attr_name = None
+    _attr_translation_key = "pt32"
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_target_temperature_step = 0.5
     _attr_min_temp = TEMP_MIN

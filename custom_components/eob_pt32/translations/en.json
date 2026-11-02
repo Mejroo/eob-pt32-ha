@@ -20,6 +20,15 @@
     }
   },
   "entity": {
+    "climate": {
+      "pt32": {
+        "state": {
+          "auto": "Auto",
+          "heat": "Manual",
+          "off": "Off"
+        }
+      }
+    },
     "binary_sensor": {
       "boiler": {
         "name": "Boiler"

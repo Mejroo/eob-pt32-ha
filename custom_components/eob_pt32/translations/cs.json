@@ -20,6 +20,15 @@
     }
   },
   "entity": {
+    "climate": {
+      "pt32": {
+        "state": {
+          "auto": "Auto",
+          "heat": "Manuál",
+          "off": "Vypnuto"
+        }
+      }
+    },
     "binary_sensor": {
       "boiler": {
         "name": "Kotel"
