@@ -16,9 +16,11 @@ Položka: `[typ 2 B][délka 2 B][data]`, typ s bitem `0x8000` = čtení.
 
 | Položka | Význam |
 |---|---|
-| `0x0002` stav | `[0]` teplota celé °C, `[2]` desetiny, `[4]` 1 = auto / 0 = manual, `[5]` nastavená × 2 (v off 0), `[6]` `0x40` = kotel sepnutý, `0x04` = off, `[7]` příznaky (`0x20` NTP, `0x40` zámek) |
-| `0x0002` zápis | 3 B: `[01][režim][teplota × 2]`, režim auto `0x21`, manual `0x20`, off `0x24` |
+| `0x0002` stav | `[0]` teplota celé °C, `[2]` desetiny, `[3]` číslo programu, `[4]` 1 = auto / 0 = manual, `[5]` nastavená × 2 (v off 0), `[6]` `0x40` = kotel sepnutý, `0x04` = off, `[7]` příznaky (`0x20` NTP, `0x40` zámek) |
+| `0x0002` zápis | 3 B: `[program][režim][teplota × 2]`, režim auto `0x21`, manual `0x20`, off `0x24` |
 | `0x0001`, `0x0008` | čítač změn |
+| `0x000D` program | čtení s 1 B čísla (1–9) → `[číslo][týdenní rozvrh][název 16 B]` |
+| `0x0022` kotel | dotaz s 1 B `00` → `[hodiny 2 B][minuty]` doby provozu kotle |
 | `0x0007` hodiny | `rr mm dd hh mm ss` |
 | `0x0005` | NTP server (text) |
 
@@ -30,8 +32,11 @@ integraci **Elektrobock PT32 WiFi** (e-mail a heslo z aplikace).
 ## Entity
 
 - `climate`: teplota s desetinami, režimy Auto (program), Topit = manual (nastavitelná teplota), Vypnuto; změna teploty v auto přepne na manual.
-- `binary_sensor` **Kotel**: sepnutí kotle.
+- `binary_sensor` **Kotel**: sepnutí kotle (zapnuto/vypnuto).
+- `select` **Program**: výběr z 9 programů termostatu (názvy z termostatu, výběr přepne do auto).
+- `sensor` **Hodiny provozu kotle**: počítadlo termostatu (h).
+- Název termostatu se jednou za hodinu převezme z účtu (přejmenování v aplikaci).
 
 ## Omezení
 
-- Týdenní program se zatím nečte ani nezapisuje.
+- Rozvrh programů se zatím nezobrazuje ani needituje.

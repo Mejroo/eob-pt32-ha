@@ -33,6 +33,16 @@
       "boiler": {
         "name": "Kotel"
       }
+    },
+    "select": {
+      "program": {
+        "name": "Program"
+      }
+    },
+    "sensor": {
+      "boiler_hours": {
+        "name": "Hodiny provozu kotle"
+      }
     }
   }
 }

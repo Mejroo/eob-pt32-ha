@@ -26,6 +26,7 @@ from .const import (
     ST_AUTO,
     ST_DESIRED,
     ST_FLAGS,
+    ST_PROGRAM,
     ST_STATE,
     STATE_HEATING,
     STATE_OFF,
@@ -93,6 +94,7 @@ class PT32Climate(PT32Entity, ClimateEntity):
         clock = self._hub.items.get(ITEM_CLOCK)
         attrs: dict[str, Any] = {}
         if st:
+            attrs["program"] = self._hub.programs.get(st[ST_PROGRAM], st[ST_PROGRAM])
             attrs["keyboard_locked"] = bool(st[ST_FLAGS] & 0x40)
             attrs["raw_status"] = st.hex()
         if clock and len(clock) >= 6:
@@ -108,7 +110,9 @@ class PT32Climate(PT32Entity, ClimateEntity):
             mode_byte |= MODE_OFF
         if temperature is None:
             temperature = (st[ST_DESIRED] / 2 if st and st[ST_DESIRED] else None) or 20.0
-        self._hub.write_status(mode_byte, temperature)
+        # Aktivní program se zachová (první bajt zápisu je číslo programu).
+        program = st[ST_PROGRAM] if st and st[ST_PROGRAM] else 1
+        self._hub.write_status(program, mode_byte, temperature)
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         temperature = kwargs.get(ATTR_TEMPERATURE)
