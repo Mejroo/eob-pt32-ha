@@ -1,0 +1,11 @@
+{
+  "domain": "eob_pt32",
+  "name": "Elektrobock PT32 WiFi",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.elektrobock.cz",
+  "iot_class": "cloud_push",
+  "requirements": ["paho-mqtt>=2.0.0"],
+  "version": "0.1.0"
+}

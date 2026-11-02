@@ -1,0 +1,22 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Elektrobock PT32 WiFi",
+        "description": "Přihlaste se stejným účtem jako v aplikaci EOB PT-WIFI.",
+        "data": {
+          "username": "E-mail / uživatel",
+          "password": "Heslo"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Špatný e-mail nebo heslo.",
+      "cannot_connect": "Server Elektrobock není dostupný.",
+      "no_devices": "V účtu není žádný termostat PT32 WiFi."
+    },
+    "abort": {
+      "already_configured": "Tento účet už je přidaný."
+    }
+  }
+}
