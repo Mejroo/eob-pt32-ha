@@ -129,6 +129,7 @@ class PT32Hub:
 
     def write_status(self, mode_byte: int, desired: float) -> None:
         self._publish([(ITEM_STATUS, bytes([0x01, mode_byte, int(round(desired * 2))]))])
+        self.request_state_soon()
 
     def _publish(self, items: list[tuple[int, bytes]]) -> None:
         if not self.connected:

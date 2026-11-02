@@ -16,8 +16,9 @@ Položka: `[typ 2 B][délka 2 B][data]`, typ s bitem `0x8000` = čtení.
 
 | Položka | Význam |
 |---|---|
-| `0x0002` stav | `[0]` skutečná teplota (celé °C), `[4]` 1 = auto / 0 = ruční, `[5]` nastavená × 2, `[6]` `0x40` = topí, `[7]` příznaky (`0x20` NTP, `0x40` zámek) |
-| `0x0002` zápis | 3 B: `[01][režim: 0x01 auto, 0x04 ignorovat teplotu, 0x20 NTP][teplota × 2]` |
+| `0x0002` stav | `[0]` teplota celé °C, `[2]` desetiny, `[4]` 1 = auto / 0 = manual, `[5]` nastavená × 2 (v off 0), `[6]` `0x40` = kotel sepnutý, `0x04` = off, `[7]` příznaky (`0x20` NTP, `0x40` zámek) |
+| `0x0002` zápis | 3 B: `[01][režim][teplota × 2]`, režim auto `0x21`, manual `0x20`, off `0x24` |
+| `0x0001`, `0x0008` | čítač změn |
 | `0x0007` hodiny | `rr mm dd hh mm ss` |
 | `0x0005` | NTP server (text) |
 
@@ -26,7 +27,11 @@ Položka: `[typ 2 B][délka 2 B][data]`, typ s bitem `0x8000` = čtení.
 Zkopírujte `custom_components/eob_pt32` do `/config/custom_components/`, restartujte HA a přidejte
 integraci **Elektrobock PT32 WiFi** (e-mail a heslo z aplikace).
 
+## Entity
+
+- `climate`: teplota s desetinami, režimy Auto (program), Topit = manual (nastavitelná teplota), Vypnuto; změna teploty v auto přepne na manual.
+- `binary_sensor` **Kotel**: sepnutí kotle.
+
 ## Omezení
 
-- Teplota v místnosti chodí jen v celých stupních.
-- Režim „vypnuto“ ani týdenní program zatím nejsou zmapované.
+- Týdenní program se zatím nečte ani nezapisuje.

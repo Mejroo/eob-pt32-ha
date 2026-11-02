@@ -13,7 +13,7 @@ from homeassistant.helpers.event import async_track_time_interval
 from .const import POLL_SECONDS
 from .hub import AuthError, PT32Hub, async_fetch_devices
 
-PLATFORMS = [Platform.CLIMATE]
+PLATFORMS = [Platform.CLIMATE, Platform.BINARY_SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

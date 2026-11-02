@@ -25,14 +25,18 @@ ITEM_CLOCK = 0x0007
 
 # Bajty položky stavu (0x0002), ověřeno proti aplikaci a displeji.
 ST_ACTUAL = 0  # skutečná teplota, celé °C
-ST_AUTO = 4  # 1 = auto (program), 0 = ruční
-ST_DESIRED = 5  # nastavená teplota × 2
-ST_RELAY = 6  # bit 0x40 = topí
+ST_ACTUAL_TENTHS = 2  # desetiny skutečné teploty (20 + 6 → 20,6 °C, jako v aplikaci)
+ST_AUTO = 4  # 1 = auto (program), 0 = manual
+ST_DESIRED = 5  # nastavená teplota × 2 (v off 0)
+ST_STATE = 6  # 0x40 = kotel sepnutý, 0x04 = off
 ST_FLAGS = 7  # 0x20 = čas z NTP, 0x40 = zamčená klávesnice
 
+# Bajt režimu při zápisu položky 0x0002 (ověřeno z aplikace): auto 0x21, manual 0x20, off 0x24.
 MODE_AUTO = 0x01
+MODE_OFF = 0x04
 MODE_KEEP_MASK = 0x60  # NTP a zámek klávesnice se při zápisu zachovají
-RELAY_HEATING = 0x40
+STATE_HEATING = 0x40
+STATE_OFF = 0x04
 
 TEMP_MIN = 3.0
 TEMP_MAX = 39.0

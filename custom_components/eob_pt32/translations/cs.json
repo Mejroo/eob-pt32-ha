@@ -18,5 +18,12 @@
     "abort": {
       "already_configured": "Tento účet už je přidaný."
     }
+  },
+  "entity": {
+    "binary_sensor": {
+      "boiler": {
+        "name": "Kotel"
+      }
+    }
   }
 }
