@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity
 
 from .const import DOMAIN
-from .hub import PT32Hub
+from .hub import PT32Hub, WriteError
 
 
 class PT32Entity(Entity):
@@ -30,4 +31,11 @@ class PT32Entity(Entity):
 
     @property
     def available(self) -> bool:
-        return self._hub.connected and self._hub.status is not None
+        return self._hub.online and self._hub.status is not None
+
+    async def _async_guard(self, write) -> None:
+        """Provede zápis; nepotvrzený zápis ohlásí v HA jako chybu."""
+        try:
+            await write
+        except WriteError as err:
+            raise HomeAssistantError(f"{self._hub.name}: {err}") from err

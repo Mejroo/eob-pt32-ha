@@ -21,6 +21,9 @@ from .const import (
     MODE_AUTO,
     MODE_KEEP_MASK,
     MODE_OFF,
+    SET_LOCK,
+    SET_TEMP_MAX,
+    SET_TEMP_MIN,
     ST_ACTUAL,
     ST_ACTUAL_TENTHS,
     ST_AUTO,
@@ -32,6 +35,7 @@ from .const import (
     STATE_OFF,
     TEMP_MAX,
     TEMP_MIN,
+    YES,
 )
 from .entity import PT32Entity
 
@@ -45,8 +49,6 @@ class PT32Climate(PT32Entity, ClimateEntity):
     _attr_translation_key = "pt32"
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_target_temperature_step = 0.5
-    _attr_min_temp = TEMP_MIN
-    _attr_max_temp = TEMP_MAX
     # AUTO = program termostatu, HEAT = manual (nastavitelná teplota), OFF = vypnuto.
     _attr_hvac_modes = [HVACMode.AUTO, HVACMode.HEAT, HVACMode.OFF]
     _attr_supported_features = (
@@ -57,6 +59,17 @@ class PT32Climate(PT32Entity, ClimateEntity):
 
     def __init__(self, hub) -> None:
         super().__init__(hub, "climate")
+
+    @property
+    def min_temp(self) -> float:
+        # Rozsah nastavitelné teploty z termostatu (v aplikaci „teplotní rozsah“, např. 10–25 °C).
+        raw = self._hub.setting(SET_TEMP_MIN)
+        return raw / 2 if raw else TEMP_MIN
+
+    @property
+    def max_temp(self) -> float:
+        raw = self._hub.setting(SET_TEMP_MAX)
+        return raw / 2 if raw else TEMP_MAX
 
     @property
     def current_temperature(self) -> float | None:
@@ -95,13 +108,14 @@ class PT32Climate(PT32Entity, ClimateEntity):
         attrs: dict[str, Any] = {}
         if st:
             attrs["program"] = self._hub.programs.get(st[ST_PROGRAM], st[ST_PROGRAM])
-            attrs["keyboard_locked"] = bool(st[ST_FLAGS] & 0x40)
             attrs["raw_status"] = st.hex()
+        if (lock := self._hub.setting(SET_LOCK)) is not None:
+            attrs["keyboard_locked"] = lock == YES
         if clock and len(clock) >= 6:
             attrs["thermostat_clock"] = f"20{clock[0]:02d}-{clock[1]:02d}-{clock[2]:02d} {clock[3]:02d}:{clock[4]:02d}:{clock[5]:02d}"
         return attrs
 
-    def _write(self, hvac_mode: HVACMode, temperature: float | None = None) -> None:
+    async def _async_write(self, hvac_mode: HVACMode, temperature: float | None = None) -> None:
         st = self._hub.status
         mode_byte = (st[ST_FLAGS] & MODE_KEEP_MASK) if st else 0x20
         if hvac_mode == HVACMode.AUTO:
@@ -112,20 +126,20 @@ class PT32Climate(PT32Entity, ClimateEntity):
             temperature = (st[ST_DESIRED] / 2 if st and st[ST_DESIRED] else None) or 20.0
         # Aktivní program se zachová (první bajt zápisu je číslo programu).
         program = st[ST_PROGRAM] if st and st[ST_PROGRAM] else 1
-        self._hub.write_status(program, mode_byte, temperature)
+        await self._async_guard(self._hub.async_write_status(program, mode_byte, temperature))
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is None:
             return
         # V auto se teplota řídí programem; ruční změna přepne na manual, stejně jako na termostatu.
-        self._write(HVACMode.HEAT, float(temperature))
+        await self._async_write(HVACMode.HEAT, float(temperature))
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
-        self._write(hvac_mode)
+        await self._async_write(hvac_mode)
 
     async def async_turn_on(self) -> None:
-        self._write(HVACMode.AUTO)
+        await self._async_write(HVACMode.AUTO)
 
     async def async_turn_off(self) -> None:
-        self._write(HVACMode.OFF)
+        await self._async_write(HVACMode.OFF)

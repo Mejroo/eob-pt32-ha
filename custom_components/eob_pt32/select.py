@@ -1,6 +1,8 @@
-"""Výběr programu termostatu (Hlavni program, Program 002 …)."""
+"""Výběr programu termostatu (Hlavni program, Program 002 …) s týdenním rozvrhem."""
 
 from __future__ import annotations
+
+from typing import Any
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
@@ -34,10 +36,21 @@ class PT32ProgramSelect(PT32Entity, SelectEntity):
         st = self._hub.status
         return self._name(st[ST_PROGRAM]) if st and st[ST_PROGRAM] else None
 
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        # Rozvrh aktivního programu po dnech, např. Po: "00:00 20 °C, 05:00 21 °C, 19:00 20 °C".
+        st = self._hub.status
+        schedule = self._hub.schedules.get(st[ST_PROGRAM]) if st else None
+        if not schedule:
+            return {}
+        return {
+            day: ", ".join(f"{time} {temp:g} °C" for time, temp in slots) for day, slots in schedule.items()
+        }
+
     async def async_select_option(self, option: str) -> None:
         number = self.options.index(option) + 1
         st = self._hub.status
         # Program platí v režimu auto – stejně jako v aplikaci se zároveň přepne do auto.
         mode_byte = ((st[ST_FLAGS] & MODE_KEEP_MASK) if st else 0x20) | MODE_AUTO
         desired = st[ST_DESIRED] / 2 if st and st[ST_DESIRED] else 20.0
-        self._hub.write_status(number, mode_byte, desired)
+        await self._async_guard(self._hub.async_write_status(number, mode_byte, desired))

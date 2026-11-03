@@ -32,6 +32,9 @@
     "binary_sensor": {
       "boiler": {
         "name": "Boiler"
+      },
+      "online": {
+        "name": "Connection"
       }
     },
     "select": {
@@ -42,6 +45,31 @@
     "sensor": {
       "boiler_hours": {
         "name": "Boiler run time"
+      },
+      "service_date": {
+        "name": "Boiler service"
+      },
+      "firmware": {
+        "name": "Firmware"
+      },
+      "last_seen": {
+        "name": "Last seen"
+      }
+    },
+    "number": {
+      "offset": {
+        "name": "Temperature offset"
+      },
+      "hysteresis": {
+        "name": "Hysteresis"
+      },
+      "min_on_time": {
+        "name": "Minimum on time"
+      }
+    },
+    "switch": {
+      "key_lock": {
+        "name": "Keypad lock"
       }
     }
   }

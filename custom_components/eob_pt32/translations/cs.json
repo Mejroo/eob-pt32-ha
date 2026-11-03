@@ -32,6 +32,9 @@
     "binary_sensor": {
       "boiler": {
         "name": "Kotel"
+      },
+      "online": {
+        "name": "Spojení"
       }
     },
     "select": {
@@ -42,6 +45,31 @@
     "sensor": {
       "boiler_hours": {
         "name": "Hodiny provozu kotle"
+      },
+      "service_date": {
+        "name": "Údržba kotle"
+      },
+      "firmware": {
+        "name": "Firmware"
+      },
+      "last_seen": {
+        "name": "Naposledy viděn"
+      }
+    },
+    "number": {
+      "offset": {
+        "name": "Korekce teploty"
+      },
+      "hysteresis": {
+        "name": "Hystereze"
+      },
+      "min_on_time": {
+        "name": "Minimální doba zapnutí"
+      }
+    },
+    "switch": {
+      "key_lock": {
+        "name": "Zámek klávesnice"
       }
     }
   }
