@@ -7,7 +7,7 @@ from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.event import async_track_time_interval
@@ -42,12 +42,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry.async_on_unload(hub.add_listener(_firmware_updater(registry, entry, hub)))
     entry.runtime_data = hubs
 
+    # @callback: bez něj HA spustí funkci ve vlákně executoru a notify() by zapisovalo stav entit mimo smyčku.
+    @callback
     def _poll(_now) -> None:
         for hub in hubs:
             hub.request_state()
             # Bez odpovědi se entity samy neobnoví; přepočítá se dostupnost a spojení.
             hub.notify()
 
+    @callback
     def _poll_boiler(_now) -> None:
         for hub in hubs:
             hub.request_boiler_hours()
