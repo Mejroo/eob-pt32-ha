@@ -4,6 +4,13 @@ Verze se řídí [sémantickým verzováním](https://semver.org/lang/cs/), CHAN
 automaticky z [conventional commitů](CONTRIBUTING.md#commity). Dokud je integrace v betě (0.x),
 může se mezi menšími verzemi změnit i chování entit.
 
+## [0.4.1](https://github.com/Mejroo/eob-pt32-ha/compare/v0.4.0...v0.4.1) (2026-11-03)
+
+
+### Opravy
+
+* stav entit se při pravidelném dotazu zapisoval mimo event loop ([bd0a152](https://github.com/Mejroo/eob-pt32-ha/commit/bd0a152291d746364dcfd03895caa2b304d3e949))
+
 ## [0.4.0] – 2026-11-03
 
 ### Přidáno
