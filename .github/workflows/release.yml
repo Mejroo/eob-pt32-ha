@@ -1,46 +1,38 @@
 name: Vydání
 
-# Vydání se spustí pushnutím tagu vX.Y.Z; verze v manifest.json musí odpovídat tagu.
+# release-please z conventional commitů na main připraví PR s novou verzí a CHANGELOGem.
+# Po jeho sloučení vytvoří tag a GitHub Release; tento workflow k němu přibalí eob_pt32.zip pro HACS.
 on:
   push:
-    tags:
-      - "v*"
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
-  release:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  zip:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Kontrola verze
-        run: |
-          tag="${GITHUB_REF_NAME#v}"
-          manifest=$(jq -r .version custom_components/eob_pt32/manifest.json)
-          if [ "$tag" != "$manifest" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME neodpovídá verzi $manifest v manifest.json"
-            exit 1
-          fi
-
-      - name: Poznámky z CHANGELOG.md
-        run: |
-          awk -v v="${GITHUB_REF_NAME#v}" '
-            $0 ~ "^## \[" v "\]" { on = 1; next }
-            /^## \[/ { on = 0 }
-            on
-          ' CHANGELOG.md > notes.md
-          test -s notes.md || { echo "::error::V CHANGELOG.md chybí sekce ## [${GITHUB_REF_NAME#v}]"; exit 1; }
-
       - name: Balíček
         run: cd custom_components/eob_pt32 && zip -r "$GITHUB_WORKSPACE/eob_pt32.zip" . -x "__pycache__/*"
-
-      - name: GitHub Release
+      - name: Nahrání k vydání
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          # Předběžné verze (v0.5.0-beta1) HACS nabídne jen těm, kdo mají zapnuté betaverze.
-          prerelease=""
-          case "$GITHUB_REF_NAME" in *-*) prerelease="--prerelease" ;; esac
-          gh release create "$GITHUB_REF_NAME" eob_pt32.zip --title "$GITHUB_REF_NAME" --notes-file notes.md $prerelease
+        run: gh release upload "${{ needs.release-please.outputs.tag_name }}" eob_pt32.zip --clobber

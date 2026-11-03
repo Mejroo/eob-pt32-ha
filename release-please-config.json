@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "eob_pt32",
+      "include-component-in-tag": false,
+      "bump-minor-pre-major": true,
+      "changelog-path": "CHANGELOG.md",
+      "changelog-sections": [
+        { "type": "feat", "section": "Nové funkce" },
+        { "type": "fix", "section": "Opravy" },
+        { "type": "perf", "section": "Výkon" },
+        { "type": "docs", "section": "Dokumentace" },
+        { "type": "refactor", "section": "Úpravy kódu", "hidden": true },
+        { "type": "ci", "section": "CI", "hidden": true },
+        { "type": "chore", "section": "Údržba", "hidden": true }
+      ],
+      "extra-files": [
+        { "type": "json", "path": "custom_components/eob_pt32/manifest.json", "jsonpath": "$.version" }
+      ]
+    }
+  }
+}
