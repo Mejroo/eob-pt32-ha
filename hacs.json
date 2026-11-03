@@ -1,4 +1,7 @@
 {
   "name": "Elektrobock PT32 WiFi",
-  "render_readme": true
+  "homeassistant": "2024.8.0",
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "eob_pt32.zip"
 }

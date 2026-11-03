@@ -1,11 +1,15 @@
 {
   "domain": "eob_pt32",
   "name": "Elektrobock PT32 WiFi",
-  "codeowners": [],
+  "codeowners": [
+    "@Mejroo"
+  ],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://www.elektrobock.cz",
+  "documentation": "https://github.com/Mejroo/eob-pt32-ha",
+  "integration_type": "hub",
   "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/Mejroo/eob-pt32-ha/issues",
   "requirements": [
     "paho-mqtt>=2.0.0"
   ],

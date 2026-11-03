@@ -39,7 +39,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     registry = dr.async_get(hass)
     for hub in hubs:
         await hub.async_start()
-        entry.async_on_unload(hub.add_listener(_firmware_updater(registry, hub)))
+        entry.async_on_unload(hub.add_listener(_firmware_updater(registry, entry, hub)))
     entry.runtime_data = hubs
 
     def _poll(_now) -> None:
@@ -69,7 +69,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             if hub is None or not name or name == hub.name:
                 continue
             hub.name = name
-            if entry_device := registry.async_get_device(identifiers={(DOMAIN, str(hub.device_id))}):
+            if entry_device := _device(registry, entry, hub):
                 registry.async_update_device(entry_device.id, name=name)
 
     entry.async_on_unload(async_track_time_interval(hass, _poll, timedelta(seconds=POLL_SECONDS)))
@@ -79,12 +79,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return True
 
 
-def _firmware_updater(registry: dr.DeviceRegistry, hub: PT32Hub):
+def _device(registry: dr.DeviceRegistry, entry: ConfigEntry, hub: PT32Hub) -> dr.DeviceEntry | None:
+    # async_get_device(identifiers=…) je od HA 2026 zastaralé; hledá se mezi zařízeními této integrace.
+    identifier = (DOMAIN, str(hub.device_id))
+    return next(
+        (d for d in dr.async_entries_for_config_entry(registry, entry.entry_id) if identifier in d.identifiers),
+        None,
+    )
+
+
+def _firmware_updater(registry: dr.DeviceRegistry, entry: ConfigEntry, hub: PT32Hub):
     """Promítne verzi firmwaru z termostatu do registru zařízení."""
 
     def _update() -> None:
         version = hub.firmware_version
-        device = registry.async_get_device(identifiers={(DOMAIN, str(hub.device_id))})
+        device = _device(registry, entry, hub)
         if version and device and device.sw_version != version:
             registry.async_update_device(device.id, sw_version=version)
 
