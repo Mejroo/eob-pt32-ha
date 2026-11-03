@@ -29,4 +29,4 @@ jobs:
             revert
           requireScope: false
           subjectPattern: ^[^A-Z].+$
-          subjectPatternError: Popis za typem začněte malým písmenem, např. "feat: zápis rozvrhu".
+          subjectPatternError: 'Popis za typem začněte malým písmenem, např. "feat: zápis rozvrhu".'
