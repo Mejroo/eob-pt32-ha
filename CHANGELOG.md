@@ -1,7 +1,8 @@
 # Změny
 
-Verze se řídí [sémantickým verzováním](https://semver.org/lang/cs/). Dokud je integrace
-v betě (0.x), může se mezi menšími verzemi změnit i chování entit.
+Verze se řídí [sémantickým verzováním](https://semver.org/lang/cs/), CHANGELOG vzniká
+automaticky z [conventional commitů](CONTRIBUTING.md#commity). Dokud je integrace v betě (0.x),
+může se mezi menšími verzemi změnit i chování entit.
 
 ## [0.4.0] – 2026-11-03
 

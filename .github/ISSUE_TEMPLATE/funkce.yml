@@ -1,0 +1,17 @@
+name: Nová funkce
+description: Návrh na podporu další funkce termostatu nebo aplikace
+labels: [enhancement]
+body:
+  - type: textarea
+    id: popis
+    attributes:
+      label: Co by integrace měla umět
+      description: Jak to vypadá v aplikaci EOB PT-WIFI (obrazovka, hodnoty)
+    validations:
+      required: true
+  - type: textarea
+    id: odposlech
+    attributes:
+      label: Odposlech (nepovinné)
+      description: Zprávy z PTWIFI/I a PTWIFI/O při změně v aplikaci – viz docs/PROTOKOL.md. Bez citlivých údajů.
+      render: text

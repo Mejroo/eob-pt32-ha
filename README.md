@@ -91,12 +91,11 @@ používat souběžně.
 
 ## Jak to funguje
 
-Popis protokolu, který integrace používá, je v [docs/PROTOKOL.md](docs/PROTOKOL.md).
-Skripty pro odposlech další funkcí aplikace jsou ve složce [tools/](tools).
+Popis protokolu, který integrace používá, i postup odposlechu aplikace je v
+[docs/PROTOKOL.md](docs/PROTOKOL.md).
 
-Chcete pomoct s podporou další funkce nebo jiného firmwaru? Založte
-[issue](https://github.com/Mejroo/eob-pt32-ha/issues) – nejvíc pomůže log z měřicího skriptu
-(bez položky `0x002E`, vypadá jako klíč zařízení).
+Chcete pomoct s podporou další funkce nebo jiného firmwaru? Přečtěte si
+[CONTRIBUTING.md](CONTRIBUTING.md) a založte [issue](https://github.com/Mejroo/eob-pt32-ha/issues).
 
 ## Vydání
 

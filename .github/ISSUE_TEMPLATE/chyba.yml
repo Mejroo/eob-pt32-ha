@@ -1,0 +1,41 @@
+name: Chyba
+description: Něco nefunguje, jak má
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Nevkládejte** e-mail, heslo, `mqttPass`, `uniqueIdentifier`, položku `0x002E` ani IP adresu či SSID.
+        V logu je nahraďte třeba `XXXX`.
+  - type: input
+    id: verze
+    attributes:
+      label: Verze integrace
+      placeholder: 0.4.0
+    validations:
+      required: true
+  - type: input
+    id: ha
+    attributes:
+      label: Verze Home Assistantu
+      placeholder: 2026.9.4
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware termostatu
+      description: Entita Firmware nebo informace o zařízení v aplikaci
+      placeholder: "14.03"
+  - type: textarea
+    id: popis
+    attributes:
+      label: Co se stalo a co jste čekali
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Nastavení → Systém → Protokoly, filtr `eob_pt32` (po začernění citlivých údajů)
+      render: text

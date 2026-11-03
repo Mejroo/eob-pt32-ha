@@ -114,16 +114,15 @@ otevření čte všechna jedním rámcem a zápis termostat potvrdí stejnou hod
 Obrazovka „Informace o zařízení“ v aplikaci používá jiné hlavičky rámce (`3722`, `3716`,
 `B781`, `B77F`) pro MAC, IP adresu a SSID. Integrace je nepoužívá.
 
-## Měřicí skripty
+## Jak odposlouchávat aplikaci
 
-Ve složce [`tools/`](../tools) jsou skripty v Node.js, které odposlouchávají příkazy aplikace
-a odpovědi termostatu a vedou vás jednotlivými kroky:
+Funkce se mapují tak, že se MQTT klientem (např. MQTT Explorer nebo knihovna `mqtt` v Node.js)
+připojíte stejnými údaji jako integrace, odebíráte `PTWIFI/I/<uid6>` i `PTWIFI/O/<uid6>`
+a v aplikaci měníte vždy jen jednu věc. Zprávy dekódujte z base64 a rozeberte podle popisu výše.
 
-```bash
-cd tools
-npm install
-node eob_kroky3.js
-```
+Při sdílení výsledků (issue, pull request) nikdy nezveřejňujte:
 
-Přihlašovací údaje se zadávají do terminálu a nikam se neukládají. Log (`*_log.txt`) obsahuje
-surová data z termostatu včetně položky `0x002E`, která vypadá jako klíč zařízení – nesdílejte ho.
+- e-mail, heslo, `authToken` ani `mqttPass`,
+- `uniqueIdentifier` (je součástí názvu MQTT uživatele i témat),
+- položku `0x002E` – vypadá jako klíč zařízení,
+- odpovědi s hlavičkami `3716`, `B781` (IP adresa, SSID) a název termostatu, pokud prozrazuje, kde bydlíte.
