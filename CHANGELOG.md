@@ -4,6 +4,13 @@ Verze se řídí [sémantickým verzováním](https://semver.org/lang/cs/), CHAN
 automaticky z [conventional commitů](CONTRIBUTING.md#commity). Dokud je integrace v betě (0.x),
 může se mezi menšími verzemi změnit i chování entit.
 
+## [0.5.0](https://github.com/Mejroo/eob-pt32-ha/compare/v0.4.1...v0.5.0) (2026-11-24)
+
+
+### Nové funkce
+
+* vlastní ikona integrace pro Home Assistant a HACS ([5eb26d7](https://github.com/Mejroo/eob-pt32-ha/commit/5eb26d7a53f53054c00c0d422ef47f6a8ebf48f2))
+
 ## [0.4.1](https://github.com/Mejroo/eob-pt32-ha/compare/v0.4.0...v0.4.1) (2026-11-03)
 
 
